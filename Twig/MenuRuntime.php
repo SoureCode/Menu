@@ -13,8 +13,10 @@ namespace SoureCode\Component\Menu\Twig;
 use IteratorAggregate;
 use SoureCode\Component\Menu\Matcher\Matcher;
 use SoureCode\Component\Menu\MenuRegistryInterface;
+use SoureCode\Component\Menu\Model\MenuItemInterface;
 use SoureCode\Component\Menu\Model\MenuItemView;
 use SoureCode\Component\Menu\Model\MenuView;
+use Symfony\Component\Security\Core\Security;
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 
@@ -29,10 +31,13 @@ class MenuRuntime extends AbstractExtension
 
     private MenuRegistryInterface $menuRegistry;
 
-    public function __construct(MenuRegistryInterface $menuRegistry, Matcher $matcher, array $defaultOptions = [])
+    private Security $security;
+
+    public function __construct(MenuRegistryInterface $menuRegistry, Matcher $matcher, Security $security, array $defaultOptions = [])
     {
         $this->menuRegistry = $menuRegistry;
         $this->matcher = $matcher;
+        $this->security = $security;
         $this->defaultOptions = array_merge([
             'template' => 'soure_code_menu.html.twig',
             'clear_matcher' => true,
@@ -95,6 +100,16 @@ class MenuRuntime extends AbstractExtension
 
     public function renderMenuItem(Environment $environment, MenuItemView $menuItemView, array $options = []): string
     {
+        /**
+         * @var MenuItemInterface $item
+         */
+        $item = $menuItemView->vars['item'];
+        $grant = $item->getGrant();
+
+        if (null !== $grant && !$this->security->isGranted($grant)) {
+            return '';
+        }
+
         $options = array_merge($this->defaultOptions, $options);
         $template = $environment->resolveTemplate($options['template']);
         $rendered = $template->renderBlock(
