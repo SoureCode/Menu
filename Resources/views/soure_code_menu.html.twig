@@ -82,12 +82,30 @@
 
 {%- block text_element -%}
     <span {{- _self.attributes(element_attributes) -}}>
+        {{- block('icon') -}}
         {{- label -}}
     </span>
 {%- endblock text_element -%}
 
 {%- block link_element -%}
     <a {{- _self.attributes(element_attributes) -}}>
+        {{- block('icon') -}}
         {{- label -}}
     </a>
 {%- endblock link_element -%}
+
+{%- block icon -%}
+    {% if icon is defined and icon is not empty %}
+        {%- set icon_attributes = icon_attributes is defined ? icon_attributes : {} -%}
+        {%- set classes = icon_attributes.class is defined ? icon_attributes.class : '' -%}
+        {%- set icon_attributes = icon_attributes|merge({'class': (classes ~ ' ' ~ icon)|trim}) -%}
+
+        {{- block('icon_element') -}}
+    {% endif %}
+{%- endblock icon -%}
+
+{%- block icon_element -%}
+    <span{{- _self.attributes(icon_attributes) -}}></span>
+    {{- ' ' -}}
+{%- endblock icon_element -%}
+
