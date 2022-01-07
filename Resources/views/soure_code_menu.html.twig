@@ -1,0 +1,93 @@
+{#- @var \SoureCode\Component\Menu\Model\MenuView menu -#}
+{#- @var \SoureCode\Component\Menu\Model\MenuItemView item -#}
+
+{%- macro attributes(attributes) -%}
+    {%- for name, value in attributes -%}
+        {%- if value is not none and value is not same as(false) -%}
+            {{- ' %s="%s"'|format(name, value is same as(true) ? name|escape : value|escape)|raw -}}
+        {%- endif -%}
+    {%- endfor -%}
+{%- endmacro -%}
+
+{%- block menu -%}
+    {%- set tag = tag is defined ? tag : 'nav' -%}
+    {%- set attributes = attributes is defined ? attributes : {} -%}
+
+    {%- set list_tag = list_tag is defined ? list_tag : 'ol' -%}
+    {%- set list_attributes = list_attributes is defined ? list_attributes : {} -%}
+
+    <{{- tag -}} {{- _self.attributes(attributes) -}}>
+    {{- block('list') -}}
+    </{{- tag -}}>
+{%- endblock menu -%}
+
+{%- block list -%}
+    <{{- list_tag -}} {{- _self.attributes(list_attributes) -}}>
+    {{- block('menu_items') -}}
+    </{{- list_tag -}}>
+{%- endblock list -%}
+
+{%- block menu_items -%}
+    {%- for item in menu -%}
+        {{- menu_render_menu_item(item, {'template': options.template}) -}}
+    {%- endfor -%}
+{%- endblock menu_items -%}
+
+{%- block menu_item -%}
+    {%- set list_tag = list_tag is defined ? list_tag : 'ol' -%}
+    {%- set list_attributes = list_attributes is defined ? list_attributes : {} -%}
+
+    {%- set list_item_tag = list_item_tag is defined ? list_item_tag : 'li' -%}
+    {%- set list_item_attributes = list_item_attributes is defined ? list_item_attributes : {} -%}
+
+    {%- set element_attributes = element_attributes is defined ? element_attributes : {} -%}
+
+    {{- block('list_item') -}}
+{%- endblock menu_item -%}
+
+{%- block menu_item_list -%}
+    {%- if item is not empty -%}
+        <{{- list_tag -}} {{- _self.attributes(list_attributes) -}}>
+        {{- block('menu_item_items') -}}
+        </{{- list_tag -}}>
+    {%- endif -%}
+{%- endblock menu_item_list -%}
+
+{%- block menu_item_items -%}
+    {%- for menuItem in item -%}
+        {{- menu_render_menu_item(menuItem, {'template': options.template}) -}}
+    {%- endfor -%}
+{%- endblock menu_item_items -%}
+
+{%- block list_item -%}
+    <{{- list_item_tag -}} {{- _self.attributes(list_item_attributes) -}}>
+    {%- if link is defined -%}
+        {%- set element_attributes = element_attributes|merge({'href': link}) -%}
+
+        {{- block('link_element') -}}
+    {%- elseif routeName is defined -%}
+        {%- if is_current and not options.current_as_link -%}
+            {{- block('text_element') -}}
+        {%- else -%}
+            {%- set element_attributes = element_attributes|merge({'href': path(routeName, routeParameters)}) -%}
+            {{- block('link_element') -}}
+        {%- endif -%}
+    {%- else -%}
+        {{- block('text_element') -}}
+    {%- endif -%}
+
+    {{- block('menu_item_list') -}}
+    </{{- list_item_tag -}}>
+{%- endblock list_item -%}
+
+{%- block text_element -%}
+    <span {{- _self.attributes(element_attributes) -}}>
+        {{- label -}}
+    </span>
+{%- endblock text_element -%}
+
+{%- block link_element -%}
+    <a {{- _self.attributes(element_attributes) -}}>
+        {{- label -}}
+    </a>
+{%- endblock link_element -%}

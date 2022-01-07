@@ -1,0 +1,33 @@
+{
+    "name": "sourecode/menu",
+    "type": "library",
+    "description": "Component to structure and build menus",
+    "keywords": ["menu", "component"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jason Schilling",
+            "email": "jason@sourecode.dev"
+        }
+    ],
+    "require": {
+        "php": "^8.0 || ^8.1",
+        "doctrine/common": "^3.2",
+        "symfony/http-foundation": "^5.3 || ^6.0",
+        "twig/twig": "^3.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "SoureCode\\Component\\Menu\\": ""
+        },
+        "exclude-from-classmap": [
+            "/Tests/"
+        ]
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "0.1-dev"
+        }
+    },
+    "minimum-stability": "dev"
+}
