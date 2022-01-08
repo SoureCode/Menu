@@ -45,5 +45,9 @@ interface MenuItemInterface
 
     public function setGrant(string|array|null $grant): self;
 
+    public function setTemplate(?string $template): self;
+
+    public function getTemplate(): ?string;
+
     public function createView(MenuItemView $parent = null): MenuItemView;
 }

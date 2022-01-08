@@ -39,6 +39,8 @@ class MenuTest extends TestCase
         $this->assertEquals([
             'name' => 'foo',
             'label' => 'bar',
+            'template' => null,
+            'grant' => null,
             'menu' => $menu,
         ], $view->vars);
 
@@ -65,6 +67,21 @@ class MenuTest extends TestCase
         $this->assertCount(0, $menu->getMenuItems());
     }
 
+    public function testGetSetGrant(): void
+    {
+        $menu = new Menu();
+
+        $this->assertNull($menu->getGrant());
+
+        $menu->setGrant('foo');
+
+        $this->assertEquals('foo', $menu->getGrant());
+
+        $menu->setGrant(['foo', 'bar']);
+
+        $this->assertEquals(['foo', 'bar'], $menu->getGrant());
+    }
+
     public function testGetSetLabel(): void
     {
         $menu = new Menu();
@@ -81,6 +98,17 @@ class MenuTest extends TestCase
         $menu->setName('test');
 
         $this->assertEquals('test', $menu->getName());
+    }
+
+    public function testGetSetTemplate(): void
+    {
+        $menu = new Menu();
+
+        $this->assertNull($menu->getTemplate());
+
+        $menu->setTemplate('foo');
+
+        $this->assertEquals('foo', $menu->getTemplate());
     }
 
     public function testItemsKeepOrderAfterItemRemoval(): void

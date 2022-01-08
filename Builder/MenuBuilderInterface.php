@@ -17,6 +17,10 @@ interface MenuBuilderInterface
 {
     public function setLabel(string $label): self;
 
+    public function setGrant(string|array $grant): self;
+
+    public function setTemplate(string $template): self;
+
     public function addItem(string $label): MenuItemBuilderInterface;
 
     public function addLinkItem(string $label, string $link): LinkMenuItemBuilderInterface;

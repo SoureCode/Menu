@@ -19,5 +19,15 @@ abstract class AbstractMenu
 {
     abstract public function buildMenu(MenuBuilderInterface $menuBuilder): void;
 
+    public function getGrant(): string|array|null
+    {
+        return null;
+    }
+
     abstract public function getName(): string;
+
+    public function getTemplate(): ?string
+    {
+        return null;
+    }
 }

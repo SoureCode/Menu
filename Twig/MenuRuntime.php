@@ -25,7 +25,7 @@ use Twig\Extension\RuntimeExtensionInterface;
  */
 class MenuRuntime implements RuntimeExtensionInterface
 {
-    private array $defaultOptions;
+    private string $defaultTemplateName;
 
     private Matcher $matcher;
 
@@ -33,54 +33,77 @@ class MenuRuntime implements RuntimeExtensionInterface
 
     private Security $security;
 
-    public function __construct(MenuRegistryInterface $menuRegistry, Matcher $matcher, Security $security, array $defaultOptions = [])
-    {
+    public function __construct(
+        MenuRegistryInterface $menuRegistry,
+        Matcher $matcher,
+        Security $security,
+        ?string $defaultTemplateName = null
+    ) {
         $this->menuRegistry = $menuRegistry;
         $this->matcher = $matcher;
         $this->security = $security;
-        $this->defaultOptions = array_merge([
-            'template' => 'soure_code_menu.html.twig',
-            'clear_matcher' => true,
-            'current_as_link' => true,
-        ], $defaultOptions);
+        $this->defaultTemplateName = $defaultTemplateName ?? 'soure_code_menu.html.twig';
     }
 
-    public function renderMenuBlock(Environment $environment, array $context, string $blockName, ?string $templateName = null): string
+    public function render(Environment $environment, string $menuName, ?string $templateName = null): string
     {
-        $templateName = $templateName ?? $this->defaultOptions['template'];
-        $template = $environment->resolveTemplate($templateName);
-
-        ob_start();
-
-        $template->displayBlock($blockName, $context);
-
-        return ob_get_clean();
-    }
-
-    public function render(Environment $environment, string $menuName, array $options = []): string
-    {
-        $options = array_merge($this->defaultOptions, $options);
         $menu = $this->menuRegistry->build($menuName);
-        $menuView = $menu->createView();
 
-        $this->walkView($menuView, function (MenuView|MenuItemView $view) {
+        $grant = $menu->getGrant();
+
+        if (null !== $grant && !$this->security->isGranted($grant)) {
+            return '';
+        }
+
+        $menuView = $menu->createView();
+        $menuView->vars['template'] = $templateName ?? $menuView->vars['template'] ?? $this->defaultTemplateName;
+
+        $rendered = $this->renderMenu($environment, $menuView);
+
+        $this->matcher->clear();
+
+        return $rendered;
+    }
+
+    public function renderMenu(Environment $environment, MenuView $menuView, ?string $templateName = null): string
+    {
+        $templateName = $templateName ?? $menuView->vars['template'] ?? $this->defaultTemplateName;
+
+        $menuView->vars['template'] = $templateName;
+
+        $this->walkView($menuView, function (MenuView|MenuItemView $view) use ($menuView) {
             if (!$view instanceof MenuItemView) {
                 return;
             }
 
+            /**
+             * @var MenuItemInterface $item
+             */
             $item = $view->vars['item'];
+
+            if (null === $view->vars['template']) {
+                $view->vars['template'] = $menuView->vars['template'];
+            }
 
             $view->vars['is_current'] = $this->matcher->isCurrent($item);
             $view->vars['is_ancestor'] = $this->matcher->isAncestor($item);
         });
 
-        $rendered = $this->renderMenu($environment, $menuView, $options);
+        $template = $environment->resolveTemplate($templateName);
 
-        if ($options['clear_matcher']) {
-            $this->matcher->clear();
-        }
+        ob_start();
 
-        return $rendered;
+        $template->displayBlock(
+            'menu',
+            array_merge(
+                $menuView->vars,
+                [
+                    'menu' => $menuView,
+                ]
+            )
+        );
+
+        return ob_get_clean();
     }
 
     private function walkView(IteratorAggregate $view, callable $callback): void
@@ -92,28 +115,23 @@ class MenuRuntime implements RuntimeExtensionInterface
         }
     }
 
-    public function renderMenu(Environment $environment, MenuView $menuView, array $options = []): string
-    {
-        $options = array_merge($this->defaultOptions, $options);
-        $template = $environment->resolveTemplate($options['template']);
+    public function renderMenuBlock(
+        Environment $environment,
+        array $context,
+        string $blockName,
+        ?string $templateName = null
+    ): string {
+        $templateName = $templateName ?? $this->defaultTemplateName;
+        $template = $environment->resolveTemplate($templateName);
 
         ob_start();
 
-        $template->displayBlock(
-            'menu',
-            array_merge(
-                $menuView->vars,
-                [
-                    'menu' => $menuView,
-                    'options' => $options,
-                ]
-            )
-        );
+        $template->displayBlock($blockName, $context);
 
         return ob_get_clean();
     }
 
-    public function renderMenuItem(Environment $environment, MenuItemView $menuItemView, array $options = []): string
+    public function renderMenuItem(Environment $environment, MenuItemView $menuItemView, ?string $templateName = null): string
     {
         /**
          * @var MenuItemInterface $item
@@ -125,8 +143,10 @@ class MenuRuntime implements RuntimeExtensionInterface
             return '';
         }
 
-        $options = array_merge($this->defaultOptions, $options);
-        $template = $environment->resolveTemplate($options['template']);
+        $templateName = $templateName ?? $menuItemView->vars['template'] ?? $this->defaultTemplateName;
+        $menuItemView->vars['template'] = $templateName;
+
+        $template = $environment->resolveTemplate($templateName);
 
         ob_start();
 
@@ -136,7 +156,6 @@ class MenuRuntime implements RuntimeExtensionInterface
                 $menuItemView->vars,
                 [
                     'item' => $menuItemView,
-                    'options' => $options,
                 ]
             )
         );

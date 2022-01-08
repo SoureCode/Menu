@@ -56,6 +56,22 @@ class MenuItemBuilderTest extends TestCase
         $this->assertEquals($menuBuilder, $lowest->root());
     }
 
+    public function testSetTemplate(): void
+    {
+        $menuBuilder = new MenuBuilder('test');
+        $menuItemBuilder = $menuBuilder->addItem('foo');
+        $director = new Director($menuBuilder);
+
+        $menuItemBuilder->setTemplate('bar');
+
+        /**
+         * @var MenuInterface $menu
+         */
+        $menu = $director->build();
+
+        $this->assertEquals('bar', $menu->getMenuItems()->get(0)->getTemplate());
+    }
+
     public function testAddLinkItem(): void
     {
         $menuBuilder = new MenuBuilder('test');

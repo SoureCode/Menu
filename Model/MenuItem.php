@@ -33,6 +33,8 @@ class MenuItem implements MenuItemInterface
 
     protected ?MenuItemInterface $parent = null;
 
+    protected ?string $template = null;
+
     public function __construct()
     {
         $this->items = new ArrayCollection();
@@ -59,6 +61,7 @@ class MenuItem implements MenuItemInterface
 
         $view->vars['item'] = $this;
         $view->vars['menu'] = $this->getMenu();
+        $view->vars['template'] = $this->getTemplate();
 
         foreach ($this->items as $item) {
             $view->items[] = $item->createView($view);
@@ -67,14 +70,14 @@ class MenuItem implements MenuItemInterface
         return $view;
     }
 
-    public function getGrant(): string|array|null
+    public function getLabel(): ?string
     {
-        return $this->grant;
+        return $this->label;
     }
 
-    public function setGrant(array|string|null $grant): MenuItemInterface
+    public function setLabel(?string $label): self
     {
-        $this->grant = $grant;
+        $this->label = $label;
 
         return $this;
     }
@@ -91,14 +94,14 @@ class MenuItem implements MenuItemInterface
         return $this;
     }
 
-    public function getLabel(): ?string
+    public function getGrant(): string|array|null
     {
-        return $this->label;
+        return $this->grant;
     }
 
-    public function setLabel(?string $label): self
+    public function setGrant(array|string|null $grant): MenuItemInterface
     {
-        $this->label = $label;
+        $this->grant = $grant;
 
         return $this;
     }
@@ -128,6 +131,18 @@ class MenuItem implements MenuItemInterface
     public function setParent(?MenuItemInterface $parent): self
     {
         $this->parent = $parent;
+
+        return $this;
+    }
+
+    public function getTemplate(): ?string
+    {
+        return $this->template;
+    }
+
+    public function setTemplate(?string $template): self
+    {
+        $this->template = $template;
 
         return $this;
     }

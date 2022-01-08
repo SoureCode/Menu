@@ -20,7 +20,9 @@ class MenuItemBuilder extends AbstractBuilder implements MenuItemBuilderInterfac
 {
     protected string|array|null $grant = null;
 
-    protected string|null $icon = null;
+    protected ?string $icon = null;
+
+    protected ?string $template = null;
 
     /**
      * @var MenuItemBuilderInterface[]
@@ -112,6 +114,7 @@ class MenuItemBuilder extends AbstractBuilder implements MenuItemBuilderInterfac
 
         $menuItem->setLabel($this->label);
         $menuItem->setGrant($this->grant);
+        $menuItem->setTemplate($this->template);
         $menuItem->setIcon($this->icon);
 
         foreach ($this->items as $item) {
@@ -126,5 +129,12 @@ class MenuItemBuilder extends AbstractBuilder implements MenuItemBuilderInterfac
         }
 
         return $menuItem;
+    }
+
+    public function setTemplate(string $template): self
+    {
+        $this->template = $template;
+
+        return $this;
     }
 }

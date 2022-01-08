@@ -15,19 +15,21 @@ namespace SoureCode\Component\Menu\Builder;
  */
 interface MenuItemBuilderInterface
 {
-    public function setLabel(string $label): self;
-
-    public function setIcon(string $icon): self;
-
     public function addItem(string $label): self;
 
     public function addLinkItem(string $label, string $link): self;
 
     public function addRouteItem(string $label, string $routeName, array $routeParameters = []): self;
 
-    public function setGrant(string|array $grant): self;
-
     public function end(): ?self;
 
     public function root(): MenuBuilderInterface;
+
+    public function setGrant(string|array $grant): self;
+
+    public function setIcon(string $icon): self;
+
+    public function setLabel(string $label): self;
+
+    public function setTemplate(string $template): self;
 }

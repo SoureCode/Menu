@@ -10,26 +10,21 @@
 {%- endmacro -%}
 
 {%- block menu -%}
-    {%- set tag = tag is defined ? tag : 'nav' -%}
-    {%- set attributes = attributes is defined ? attributes : {} -%}
-
     {%- set list_tag = list_tag is defined ? list_tag : 'ol' -%}
     {%- set list_attributes = list_attributes is defined ? list_attributes : {} -%}
 
-    <{{- tag -}} {{- _self.attributes(attributes) -}}>
-    {{- soure_code_menu_render_menu_block('list', options.template) -}}
-    </{{- tag -}}>
+    {{- soure_code_menu_render_menu_block('list', template) -}}
 {%- endblock menu -%}
 
 {%- block list -%}
     <{{- list_tag -}} {{- _self.attributes(list_attributes) -}}>
-    {{- soure_code_menu_render_menu_block('menu_items', options.template) -}}
+    {{- soure_code_menu_render_menu_block('menu_items', template) -}}
     </{{- list_tag -}}>
 {%- endblock list -%}
 
 {%- block menu_items -%}
     {%- for item in menu -%}
-        {{- soure_code_menu_render_menu_item(item, {'template': options.template}) -}}
+        {{- soure_code_menu_render_menu_item(item) -}}
     {%- endfor -%}
 {%- endblock menu_items -%}
 
@@ -42,20 +37,20 @@
 
     {%- set element_attributes = element_attributes is defined ? element_attributes : {} -%}
 
-    {{- soure_code_menu_render_menu_block('list_item', options.template) -}}
+    {{- soure_code_menu_render_menu_block('list_item', template) -}}
 {%- endblock menu_item -%}
 
 {%- block menu_item_list -%}
     {%- if item is not empty -%}
         <{{- list_tag -}} {{- _self.attributes(list_attributes) -}}>
-        {{- soure_code_menu_render_menu_block('menu_item_items', options.template) -}}
+        {{- soure_code_menu_render_menu_block('menu_item_items', template) -}}
         </{{- list_tag -}}>
     {%- endif -%}
 {%- endblock menu_item_list -%}
 
 {%- block menu_item_items -%}
     {%- for menuItem in item -%}
-        {{- soure_code_menu_render_menu_item(menuItem, {'template': options.template}) -}}
+        {{- soure_code_menu_render_menu_item(menuItem) -}}
     {%- endfor -%}
 {%- endblock menu_item_items -%}
 
@@ -64,32 +59,29 @@
     {%- if link is defined -%}
         {%- set element_attributes = element_attributes|merge({'href': link}) -%}
 
-        {{- soure_code_menu_render_menu_block('link_element', options.template) -}}
+        {{- soure_code_menu_render_menu_block('link_element', template) -}}
     {%- elseif routeName is defined -%}
-        {%- if is_current and not options.current_as_link -%}
-            {{- soure_code_menu_render_menu_block('text_element', options.template) -}}
-        {%- else -%}
-            {%- set element_attributes = element_attributes|merge({'href': path(routeName, routeParameters)}) -%}
-            {{- soure_code_menu_render_menu_block('link_element', options.template) -}}
-        {%- endif -%}
+        {%- set element_attributes = element_attributes|merge({'href': path(routeName, routeParameters)}) -%}
+
+        {{- soure_code_menu_render_menu_block('link_element', template) -}}
     {%- else -%}
-        {{- soure_code_menu_render_menu_block('text_element', options.template) -}}
+        {{- soure_code_menu_render_menu_block('text_element', template) -}}
     {%- endif -%}
 
-    {{- soure_code_menu_render_menu_block('menu_item_list', options.template) -}}
+    {{- soure_code_menu_render_menu_block('menu_item_list', template) -}}
     </{{- list_item_tag -}}>
 {%- endblock list_item -%}
 
 {%- block text_element -%}
     <span {{- _self.attributes(element_attributes) -}}>
-        {{- soure_code_menu_render_menu_block('icon', options.template) -}}
+        {{- soure_code_menu_render_menu_block('icon', template) -}}
         {{- label -}}
     </span>
 {%- endblock text_element -%}
 
 {%- block link_element -%}
     <a {{- _self.attributes(element_attributes) -}}>
-        {{- soure_code_menu_render_menu_block('icon', options.template) -}}
+        {{- soure_code_menu_render_menu_block('icon', template) -}}
         {{- label -}}
     </a>
 {%- endblock link_element -%}
@@ -100,7 +92,7 @@
         {%- set classes = icon_attributes.class is defined ? icon_attributes.class : '' -%}
         {%- set icon_attributes = icon_attributes|merge({'class': (classes ~ ' ' ~ icon)|trim}) -%}
 
-        {{- soure_code_menu_render_menu_block('icon_element', options.template) -}}
+        {{- soure_code_menu_render_menu_block('icon_element', template) -}}
     {% endif %}
 {%- endblock icon -%}
 

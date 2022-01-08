@@ -59,6 +59,7 @@ class MenuItemTest extends TestCase
         $this->assertEquals([
             'label' => 'test',
             'icon' => 'fa fa-test',
+            'template' => null,
             'grant' => 'ROLE_ADMIN',
             'item' => $item,
             'menu' => $menu,
@@ -102,6 +103,17 @@ class MenuItemTest extends TestCase
         $item->setParent($parent);
 
         $this->assertEquals($parent, $item->getParent());
+    }
+
+    public function testGetSetTemplate(): void
+    {
+        $item = new MenuItem();
+
+        $this->assertNull($item->getTemplate());
+
+        $item->setTemplate('template');
+
+        $this->assertEquals('template', $item->getTemplate());
     }
 
     public function testHasMenuItems(): void

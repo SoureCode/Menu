@@ -27,6 +27,10 @@ class Menu implements MenuInterface
 
     protected ?string $label = null;
 
+    protected string|array|null $grant = null;
+
+    protected ?string $template = null;
+
     public function __construct()
     {
         $this->items = new ArrayCollection();
@@ -89,6 +93,8 @@ class Menu implements MenuInterface
 
         $view->vars['name'] = $this->getName();
         $view->vars['label'] = $this->getLabel();
+        $view->vars['template'] = $this->getTemplate();
+        $view->vars['grant'] = $this->getGrant();
 
         $view->vars['menu'] = $this;
 
@@ -97,5 +103,29 @@ class Menu implements MenuInterface
         }
 
         return $view;
+    }
+
+    public function setTemplate(?string $template): self
+    {
+        $this->template = $template;
+
+        return $this;
+    }
+
+    public function getTemplate(): ?string
+    {
+        return $this->template;
+    }
+
+    public function getGrant(): string|array|null
+    {
+        return $this->grant;
+    }
+
+    public function setGrant(array|string|null $grant): self
+    {
+        $this->grant = $grant;
+
+        return $this;
     }
 }

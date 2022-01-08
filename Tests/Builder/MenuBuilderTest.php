@@ -87,6 +87,45 @@ class MenuBuilderTest extends TestCase
         $this->assertEquals('test', $built->getName());
     }
 
+    public function testSetTemplate(): void
+    {
+        $builder = new MenuBuilder('test');
+        $director = new Director($builder);
+
+        $built = $director->build();
+        $this->assertNull($built->getTemplate());
+
+        $builder->setTemplate('test.html.twig');
+        $built = $director->build();
+
+        $this->assertEquals('test.html.twig', $built->getTemplate());
+    }
+
+    public function testSetGrant(): void
+    {
+        $builder = new MenuBuilder('test');
+        $director = new Director($builder);
+
+        $built = $director->build();
+        $this->assertNull($built->getGrant());
+
+        $builder->setGrant([
+            'ROLE_USER',
+            'ROLE_ADMIN',
+        ]);
+        $built = $director->build();
+
+        $this->assertEquals([
+            'ROLE_USER',
+            'ROLE_ADMIN',
+        ], $built->getGrant());
+
+        $builder->setGrant('ROLE_USER');
+        $built = $director->build();
+
+        $this->assertEquals('ROLE_USER', $built->getGrant());
+    }
+
     public function testSetLabel(): void
     {
         $builder = new MenuBuilder('test');

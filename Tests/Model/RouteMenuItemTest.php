@@ -51,6 +51,7 @@ class RouteMenuItemTest extends TestCase
             'grant' => null,
             'item' => $item,
             'menu' => null,
+            'template' => null,
             'routeName' => 'test',
             'routeParameters' => [
                 'foo' => 'test',

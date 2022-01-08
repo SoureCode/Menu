@@ -25,6 +25,14 @@ interface MenuInterface
 
     public function setLabel(?string $label): self;
 
+    public function setTemplate(?string $template): self;
+
+    public function getTemplate(): ?string;
+
+    public function getGrant(): string|array|null;
+
+    public function setGrant(string|array|null $grant): self;
+
     public function getMenuItems(): Collection;
 
     public function addMenuItem(MenuItemInterface $menuItem): self;

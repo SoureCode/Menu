@@ -25,7 +25,11 @@ class MenuBuilder extends AbstractBuilder implements MenuBuilderInterface
 
     protected ?string $label = null;
 
+    protected ?string $template = null;
+
     protected string $name;
+
+    protected string|array|null $grant = null;
 
     public function __construct(string $name)
     {
@@ -75,6 +79,8 @@ class MenuBuilder extends AbstractBuilder implements MenuBuilderInterface
 
         $menu->setName($this->name);
         $menu->setLabel($this->label);
+        $menu->setTemplate($this->template);
+        $menu->setGrant($this->grant);
 
         foreach ($this->items as $item) {
             if (is_a($item, MenuItemBuilderInterface::class)) {
@@ -88,5 +94,19 @@ class MenuBuilder extends AbstractBuilder implements MenuBuilderInterface
         }
 
         return $menu;
+    }
+
+    public function setGrant(array|string $grant): self
+    {
+        $this->grant = $grant;
+
+        return $this;
+    }
+
+    public function setTemplate(string $template): self
+    {
+        $this->template = $template;
+
+        return $this;
     }
 }
