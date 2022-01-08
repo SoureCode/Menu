@@ -1,5 +1,3 @@
-{#- @var \SoureCode\Component\Menu\Model\MenuView menu -#}
-{#- @var \SoureCode\Component\Menu\Model\MenuItemView item -#}
 
 {%- macro attributes(attributes) -%}
     {%- for name, value in attributes -%}
@@ -10,78 +8,82 @@
 {%- endmacro -%}
 
 {%- block menu -%}
-    {%- set list_tag = list_tag is defined ? list_tag : 'ol' -%}
-    {%- set list_attributes = list_attributes is defined ? list_attributes : {} -%}
-
     {{- soure_code_menu_render_menu_block('list', template) -}}
 {%- endblock menu -%}
 
 {%- block list -%}
+    {{- soure_code_menu_render_menu_block('list_element', template) -}}
+{%- endblock list -%}
+
+{%- block list_element -%}
+    {%- set list_tag = list_tag is defined ? list_tag : 'ol' -%}
+    {%- set list_attributes = list_attributes is defined ? list_attributes : {} -%}
+
     <{{- list_tag -}} {{- _self.attributes(list_attributes) -}}>
     {{- soure_code_menu_render_menu_block('menu_items', template) -}}
     </{{- list_tag -}}>
-{%- endblock list -%}
+{%- endblock list_element -%}
 
 {%- block menu_items -%}
-    {%- for item in menu -%}
-        {{- soure_code_menu_render_menu_item(item) -}}
+    {%- for child in item -%}
+        {{- soure_code_menu_render_menu_item(child) -}}
     {%- endfor -%}
 {%- endblock menu_items -%}
 
 {%- block menu_item -%}
-    {%- set list_tag = list_tag is defined ? list_tag : 'ol' -%}
-    {%- set list_attributes = list_attributes is defined ? list_attributes : {} -%}
-
-    {%- set list_item_tag = list_item_tag is defined ? list_item_tag : 'li' -%}
-    {%- set list_item_attributes = list_item_attributes is defined ? list_item_attributes : {} -%}
-
-    {%- set element_attributes = element_attributes is defined ? element_attributes : {} -%}
-
     {{- soure_code_menu_render_menu_block('list_item', template) -}}
 {%- endblock menu_item -%}
 
-{%- block menu_item_list -%}
-    {%- if item is not empty -%}
-        <{{- list_tag -}} {{- _self.attributes(list_attributes) -}}>
-        {{- soure_code_menu_render_menu_block('menu_item_items', template) -}}
-        </{{- list_tag -}}>
-    {%- endif -%}
-{%- endblock menu_item_list -%}
-
-{%- block menu_item_items -%}
-    {%- for menuItem in item -%}
-        {{- soure_code_menu_render_menu_item(menuItem) -}}
-    {%- endfor -%}
-{%- endblock menu_item_items -%}
-
 {%- block list_item -%}
+    {%- set list_item_tag = list_item_tag is defined ? list_item_tag : 'li' -%}
+    {%- set list_item_attributes = list_item_attributes is defined ? list_item_attributes : {} -%}
+
     <{{- list_item_tag -}} {{- _self.attributes(list_item_attributes) -}}>
-    {%- if link is defined -%}
-        {%- set element_attributes = element_attributes|merge({'href': link}) -%}
-
-        {{- soure_code_menu_render_menu_block('link_element', template) -}}
-    {%- elseif routeName is defined -%}
-        {%- set element_attributes = element_attributes|merge({'href': path(routeName, routeParameters)}) -%}
-
-        {{- soure_code_menu_render_menu_block('link_element', template) -}}
+    {%- if link is defined or routeName is defined -%}
+        {{- soure_code_menu_render_menu_block('link', template) -}}
     {%- else -%}
-        {{- soure_code_menu_render_menu_block('text_element', template) -}}
+        {{- soure_code_menu_render_menu_block('text', template) -}}
     {%- endif -%}
-
-    {{- soure_code_menu_render_menu_block('menu_item_list', template) -}}
+    {%- if item is not empty -%}
+        {{- soure_code_menu_render_menu_block('list', template) -}}
+    {%- endif -%}
     </{{- list_item_tag -}}>
     {{- soure_code_menu_render_menu_block('divider', template) -}}
 {%- endblock list_item -%}
 
+{%- block text -%}
+    {{- soure_code_menu_render_menu_block('text_element', template) -}}
+{%- endblock text -%}
+
 {%- block text_element -%}
-    <span {{- _self.attributes(element_attributes) -}}>
+    {%- set text_attributes = text_attributes is defined ? text_attributes : {} -%}
+
+    <span {{- _self.attributes(text_attributes) -}}>
         {{- soure_code_menu_render_menu_block('icon', template) -}}
         {{- label -}}
     </span>
 {%- endblock text_element -%}
 
+{%- block link -%}
+    {%- set link_attributes = link_attributes is defined ? link_attributes : {} -%}
+
+    {%- if link_attributes.href is not defined -%}
+        {%- if link is defined -%}
+            {%- set link_attributes = link_attributes|merge({'href': link}) -%}
+        {%- elseif routeName is defined -%}
+            {%- set link_attributes = link_attributes|merge({'href': path(routeName, routeParameters)}) -%}
+        {%- else -%}
+            {%- set link_attributes = link_attributes|merge({'href': '#'}) -%}
+        {%- endif -%}
+    {%- endif -%}
+
+    {{- soure_code_menu_render_menu_block('link_element', template) -}}
+{%- endblock link -%}
+
 {%- block link_element -%}
-    <a {{- _self.attributes(element_attributes) -}}>
+    {%- set link_attributes = link_attributes is defined ? link_attributes : {} -%}
+
+    <a {{- _self.attributes(link_attributes) -}}>
         {{- soure_code_menu_render_menu_block('icon', template) -}}
         {{- label -}}
     </a>
@@ -98,19 +100,21 @@
 {%- endblock icon -%}
 
 {%- block icon_element -%}
+    {%- set icon_attributes = icon_attributes is defined ? icon_attributes : {} -%}
+
     <span{{- _self.attributes(icon_attributes) -}}></span>
     {{- ' ' -}}
 {%- endblock icon_element -%}
 
 {%- block divider -%}
     {%- if append_divider -%}
-        {%- set divider_attributes = divider_attributes is defined ? divider_attributes : {} -%}
-
         {{- soure_code_menu_render_menu_block('divider_element', template) -}}
     {%- endif -%}
 {%- endblock divider -%}
 
 {%- block divider_element -%}
+    {%- set divider_attributes = divider_attributes is defined ? divider_attributes : {} -%}
+
     <hr{{- _self.attributes(divider_attributes) -}}/>
 {%- endblock divider_element -%}
 

@@ -98,7 +98,7 @@ class MenuRuntime implements RuntimeExtensionInterface
             array_merge(
                 $menuView->vars,
                 [
-                    'menu' => $menuView,
+                    'item' => $menuView,
                 ]
             )
         );
