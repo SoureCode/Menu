@@ -43,7 +43,14 @@ class MenuRegistry implements MenuRegistryInterface
             $menuService->buildMenu($menuBuilder);
             $director = new Director($menuBuilder);
 
-            $this->cache[$name] = $director->build();
+            /**
+             * @var MenuInterface $menu
+             */
+            $menu = $director->build();
+            $menu->setGrant($menuService->getGrant() ?? $menu->getGrant());
+            $menu->setTemplate($menuService->getTemplate() ?? $menu->getTemplate());
+
+            $this->cache[$name] = $menu;
         }
 
         return $this->cache[$name];
