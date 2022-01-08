@@ -71,6 +71,8 @@ class RouteMenuItemBuilder extends MenuItemBuilder implements RouteMenuItemBuild
         $menuItem->setIcon($this->icon);
         $menuItem->setRouteName($this->routeName);
         $menuItem->setRouteParameters($this->routeParameters);
+        $menuItem->setTemplate($this->template);
+        $menuItem->setAppendDivider($this->appendDivider);
 
         foreach ($this->items as $item) {
             if (is_a($item, MenuItemBuilderInterface::class)) {

@@ -70,6 +70,7 @@
 
     {{- soure_code_menu_render_menu_block('menu_item_list', template) -}}
     </{{- list_item_tag -}}>
+    {{- soure_code_menu_render_menu_block('divider', template) -}}
 {%- endblock list_item -%}
 
 {%- block text_element -%}
@@ -100,4 +101,16 @@
     <span{{- _self.attributes(icon_attributes) -}}></span>
     {{- ' ' -}}
 {%- endblock icon_element -%}
+
+{%- block divider -%}
+    {%- if append_divider -%}
+        {%- set divider_attributes = divider_attributes is defined ? divider_attributes : {} -%}
+
+        {{- soure_code_menu_render_menu_block('divider_element', template) -}}
+    {%- endif -%}
+{%- endblock divider -%}
+
+{%- block divider_element -%}
+    <hr{{- _self.attributes(divider_attributes) -}}/>
+{%- endblock divider_element -%}
 

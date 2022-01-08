@@ -52,6 +52,8 @@ class LinkMenuItemBuilder extends MenuItemBuilder implements LinkMenuItemBuilder
         $menuItem->setIcon($this->icon);
         $menuItem->setLabel($this->label);
         $menuItem->setLink($this->link);
+        $menuItem->setTemplate($this->template);
+        $menuItem->setAppendDivider($this->appendDivider);
 
         foreach ($this->items as $item) {
             if (is_a($item, MenuItemBuilderInterface::class)) {

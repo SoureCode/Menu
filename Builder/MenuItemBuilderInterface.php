@@ -21,6 +21,8 @@ interface MenuItemBuilderInterface
 
     public function addRouteItem(string $label, string $routeName, array $routeParameters = []): self;
 
+    public function appendDivider(bool $appendDivider = true): self;
+
     public function end(): ?self;
 
     public function root(): MenuBuilderInterface;

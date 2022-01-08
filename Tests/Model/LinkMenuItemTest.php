@@ -35,6 +35,7 @@ class LinkMenuItemTest extends TestCase
             'menu' => null,
             'link' => 'https://example.com',
             'template' => null,
+            'append_divider' => false,
         ], $view->vars);
     }
 

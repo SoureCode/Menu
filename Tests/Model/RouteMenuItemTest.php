@@ -56,6 +56,7 @@ class RouteMenuItemTest extends TestCase
             'routeParameters' => [
                 'foo' => 'test',
             ],
+            'append_divider' => false,
         ], $view->vars);
     }
 }

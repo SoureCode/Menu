@@ -22,6 +22,8 @@ class MenuItem implements MenuItemInterface
 
     protected ?string $icon = null;
 
+    protected ?bool $appendDivider = null;
+
     /**
      * @var Collection<int, MenuItemInterface>
      */
@@ -62,6 +64,7 @@ class MenuItem implements MenuItemInterface
         $view->vars['item'] = $this;
         $view->vars['menu'] = $this->getMenu();
         $view->vars['template'] = $this->getTemplate();
+        $view->vars['append_divider'] = $this->getAppendDivider() ?? false;
 
         foreach ($this->items as $item) {
             $view->items[] = $item->createView($view);
@@ -161,5 +164,17 @@ class MenuItem implements MenuItemInterface
         }
 
         return $this;
+    }
+
+    public function setAppendDivider(?bool $appendDivider): self
+    {
+        $this->appendDivider = $appendDivider;
+
+        return $this;
+    }
+
+    public function getAppendDivider(): ?bool
+    {
+        return $this->appendDivider;
     }
 }

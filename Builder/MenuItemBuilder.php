@@ -22,6 +22,8 @@ class MenuItemBuilder extends AbstractBuilder implements MenuItemBuilderInterfac
 
     protected ?string $icon = null;
 
+    protected ?bool $appendDivider = null;
+
     protected ?string $template = null;
 
     /**
@@ -116,6 +118,7 @@ class MenuItemBuilder extends AbstractBuilder implements MenuItemBuilderInterfac
         $menuItem->setGrant($this->grant);
         $menuItem->setTemplate($this->template);
         $menuItem->setIcon($this->icon);
+        $menuItem->setAppendDivider($this->appendDivider);
 
         foreach ($this->items as $item) {
             if (is_a($item, MenuItemBuilderInterface::class)) {
@@ -134,6 +137,13 @@ class MenuItemBuilder extends AbstractBuilder implements MenuItemBuilderInterfac
     public function setTemplate(string $template): self
     {
         $this->template = $template;
+
+        return $this;
+    }
+
+    public function appendDivider(bool $appendDivider = true): self
+    {
+        $this->appendDivider = $appendDivider;
 
         return $this;
     }

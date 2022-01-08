@@ -63,6 +63,7 @@ class MenuItemTest extends TestCase
             'grant' => 'ROLE_ADMIN',
             'item' => $item,
             'menu' => $menu,
+            'append_divider' => false,
         ], $view->vars);
 
         $this->assertEquals([
@@ -79,6 +80,21 @@ class MenuItemTest extends TestCase
         $item->setLabel('label');
 
         $this->assertEquals('label', $item->getLabel());
+    }
+
+    public function testGetSetAppendDivider(): void
+    {
+        $item = new MenuItem();
+
+        $this->assertNull($item->getAppendDivider());
+
+        $item->setAppendDivider(true);
+
+        $this->assertTrue($item->getAppendDivider());
+
+        $item->setAppendDivider(false);
+
+        $this->assertFalse($item->getAppendDivider());
     }
 
     public function testGetSetMenu(): void

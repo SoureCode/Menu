@@ -50,4 +50,8 @@ interface MenuItemInterface
     public function getTemplate(): ?string;
 
     public function createView(MenuItemView $parent = null): MenuItemView;
+
+    public function setAppendDivider(?bool $appendDivider): self;
+
+    public function getAppendDivider(): ?bool;
 }

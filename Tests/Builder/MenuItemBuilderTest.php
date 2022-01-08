@@ -72,6 +72,23 @@ class MenuItemBuilderTest extends TestCase
         $this->assertEquals('bar', $menu->getMenuItems()->get(0)->getTemplate());
     }
 
+    public function testAppendDivider(): void
+    {
+        $menuBuilder = new MenuBuilder('test');
+        $menuItemBuilder = $menuBuilder->addItem('foo');
+        $director = new Director($menuBuilder);
+
+        $menuItemBuilder->appendDivider();
+
+        /**
+         * @var MenuInterface $menu
+         */
+        $menu = $director->build();
+
+        $this->assertEquals('foo', $menu->getMenuItems()->get(0)->getLabel());
+        $this->assertTrue($menu->getMenuItems()->get(0)->getAppendDivider());
+    }
+
     public function testAddLinkItem(): void
     {
         $menuBuilder = new MenuBuilder('test');
