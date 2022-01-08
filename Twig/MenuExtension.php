@@ -21,16 +21,21 @@ class MenuExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('menu_render', [MenuRuntime::class, 'render'], [
+            new TwigFunction('soure_code_menu_render', [MenuRuntime::class, 'render'], [
                 'needs_environment' => true,
                 'is_safe' => ['html'],
             ]),
-            new TwigFunction('menu_render_menu', [MenuRuntime::class, 'renderMenu'], [
+            new TwigFunction('soure_code_menu_render_menu', [MenuRuntime::class, 'renderMenu'], [
                 'needs_environment' => true,
                 'is_safe' => ['html'],
             ]),
-            new TwigFunction('menu_render_menu_item', [MenuRuntime::class, 'renderMenuItem'], [
+            new TwigFunction('soure_code_menu_render_menu_item', [MenuRuntime::class, 'renderMenuItem'], [
                 'needs_environment' => true,
+                'is_safe' => ['html'],
+            ]),
+            new TwigFunction('soure_code_menu_render_menu_block', [MenuRuntime::class, 'renderMenuBlock'], [
+                'needs_environment' => true,
+                'needs_context' => true,
                 'is_safe' => ['html'],
             ]),
         ];

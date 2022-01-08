@@ -18,12 +18,12 @@ use SoureCode\Component\Menu\Model\MenuItemView;
 use SoureCode\Component\Menu\Model\MenuView;
 use Symfony\Component\Security\Core\Security;
 use Twig\Environment;
-use Twig\Extension\AbstractExtension;
+use Twig\Extension\RuntimeExtensionInterface;
 
 /**
  * @author Jason Schilling <jason@sourecode.dev>
  */
-class MenuRuntime extends AbstractExtension
+class MenuRuntime implements RuntimeExtensionInterface
 {
     private array $defaultOptions;
 
@@ -43,6 +43,18 @@ class MenuRuntime extends AbstractExtension
             'clear_matcher' => true,
             'current_as_link' => true,
         ], $defaultOptions);
+    }
+
+    public function renderMenuBlock(Environment $environment, array $context, string $blockName, ?string $templateName = null): string
+    {
+        $templateName = $templateName ?? $this->defaultOptions['template'];
+        $template = $environment->resolveTemplate($templateName);
+
+        ob_start();
+
+        $template->displayBlock($blockName, $context);
+
+        return ob_get_clean();
     }
 
     public function render(Environment $environment, string $menuName, array $options = []): string
@@ -84,7 +96,10 @@ class MenuRuntime extends AbstractExtension
     {
         $options = array_merge($this->defaultOptions, $options);
         $template = $environment->resolveTemplate($options['template']);
-        $rendered = $template->renderBlock(
+
+        ob_start();
+
+        $template->displayBlock(
             'menu',
             array_merge(
                 $menuView->vars,
@@ -95,7 +110,7 @@ class MenuRuntime extends AbstractExtension
             )
         );
 
-        return $rendered;
+        return ob_get_clean();
     }
 
     public function renderMenuItem(Environment $environment, MenuItemView $menuItemView, array $options = []): string
@@ -112,7 +127,10 @@ class MenuRuntime extends AbstractExtension
 
         $options = array_merge($this->defaultOptions, $options);
         $template = $environment->resolveTemplate($options['template']);
-        $rendered = $template->renderBlock(
+
+        ob_start();
+
+        $template->displayBlock(
             'menu_item',
             array_merge(
                 $menuItemView->vars,
@@ -123,6 +141,6 @@ class MenuRuntime extends AbstractExtension
             )
         );
 
-        return $rendered;
+        return ob_get_clean();
     }
 }

@@ -17,19 +17,19 @@
     {%- set list_attributes = list_attributes is defined ? list_attributes : {} -%}
 
     <{{- tag -}} {{- _self.attributes(attributes) -}}>
-    {{- block('list') -}}
+    {{- soure_code_menu_render_menu_block('list', options.template) -}}
     </{{- tag -}}>
 {%- endblock menu -%}
 
 {%- block list -%}
     <{{- list_tag -}} {{- _self.attributes(list_attributes) -}}>
-    {{- block('menu_items') -}}
+    {{- soure_code_menu_render_menu_block('menu_items', options.template) -}}
     </{{- list_tag -}}>
 {%- endblock list -%}
 
 {%- block menu_items -%}
     {%- for item in menu -%}
-        {{- menu_render_menu_item(item, {'template': options.template}) -}}
+        {{- soure_code_menu_render_menu_item(item, {'template': options.template}) -}}
     {%- endfor -%}
 {%- endblock menu_items -%}
 
@@ -42,20 +42,20 @@
 
     {%- set element_attributes = element_attributes is defined ? element_attributes : {} -%}
 
-    {{- block('list_item') -}}
+    {{- soure_code_menu_render_menu_block('list_item', options.template) -}}
 {%- endblock menu_item -%}
 
 {%- block menu_item_list -%}
     {%- if item is not empty -%}
         <{{- list_tag -}} {{- _self.attributes(list_attributes) -}}>
-        {{- block('menu_item_items') -}}
+        {{- soure_code_menu_render_menu_block('menu_item_items', options.template) -}}
         </{{- list_tag -}}>
     {%- endif -%}
 {%- endblock menu_item_list -%}
 
 {%- block menu_item_items -%}
     {%- for menuItem in item -%}
-        {{- menu_render_menu_item(menuItem, {'template': options.template}) -}}
+        {{- soure_code_menu_render_menu_item(menuItem, {'template': options.template}) -}}
     {%- endfor -%}
 {%- endblock menu_item_items -%}
 
@@ -64,32 +64,32 @@
     {%- if link is defined -%}
         {%- set element_attributes = element_attributes|merge({'href': link}) -%}
 
-        {{- block('link_element') -}}
+        {{- soure_code_menu_render_menu_block('link_element', options.template) -}}
     {%- elseif routeName is defined -%}
         {%- if is_current and not options.current_as_link -%}
-            {{- block('text_element') -}}
+            {{- soure_code_menu_render_menu_block('text_element', options.template) -}}
         {%- else -%}
             {%- set element_attributes = element_attributes|merge({'href': path(routeName, routeParameters)}) -%}
-            {{- block('link_element') -}}
+            {{- soure_code_menu_render_menu_block('link_element', options.template) -}}
         {%- endif -%}
     {%- else -%}
-        {{- block('text_element') -}}
+        {{- soure_code_menu_render_menu_block('text_element', options.template) -}}
     {%- endif -%}
 
-    {{- block('menu_item_list') -}}
+    {{- soure_code_menu_render_menu_block('menu_item_list', options.template) -}}
     </{{- list_item_tag -}}>
 {%- endblock list_item -%}
 
 {%- block text_element -%}
     <span {{- _self.attributes(element_attributes) -}}>
-        {{- block('icon') -}}
+        {{- soure_code_menu_render_menu_block('icon', options.template) -}}
         {{- label -}}
     </span>
 {%- endblock text_element -%}
 
 {%- block link_element -%}
     <a {{- _self.attributes(element_attributes) -}}>
-        {{- block('icon') -}}
+        {{- soure_code_menu_render_menu_block('icon', options.template) -}}
         {{- label -}}
     </a>
 {%- endblock link_element -%}
@@ -100,7 +100,7 @@
         {%- set classes = icon_attributes.class is defined ? icon_attributes.class : '' -%}
         {%- set icon_attributes = icon_attributes|merge({'class': (classes ~ ' ' ~ icon)|trim}) -%}
 
-        {{- block('icon_element') -}}
+        {{- soure_code_menu_render_menu_block('icon_element', options.template) -}}
     {% endif %}
 {%- endblock icon -%}
 
