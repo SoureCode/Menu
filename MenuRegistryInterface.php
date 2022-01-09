@@ -19,7 +19,7 @@ interface MenuRegistryInterface
 {
     public function add(AbstractMenu $menu): void;
 
-    public function build(string $name): MenuInterface;
+    public function build(string $name, array $context = []): MenuInterface;
 
     public function get(string $name): AbstractMenu;
 

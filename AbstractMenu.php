@@ -17,7 +17,7 @@ use SoureCode\Component\Menu\Builder\MenuBuilderInterface;
  */
 abstract class AbstractMenu
 {
-    abstract public function buildMenu(MenuBuilderInterface $menuBuilder): void;
+    abstract public function buildMenu(MenuBuilderInterface $menuBuilder, array $context = []): void;
 
     public function getGrant(): string|array|null
     {

@@ -27,7 +27,7 @@ class DemoMenu extends AbstractMenu
         return $this->name;
     }
 
-    public function buildMenu(MenuBuilderInterface $menuBuilder): void
+    public function buildMenu(MenuBuilderInterface $menuBuilder, array $context = []): void
     {
         $menuBuilder
             ->setLabel('Demo Menu')

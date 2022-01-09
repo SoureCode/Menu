@@ -45,9 +45,9 @@ class MenuRuntime implements RuntimeExtensionInterface
         $this->defaultTemplateName = $defaultTemplateName ?? 'soure_code_menu.html.twig';
     }
 
-    public function render(Environment $environment, string $menuName, ?string $templateName = null): string
+    public function render(Environment $environment, string $menuName, array $context = [], ?string $templateName = null): string
     {
-        $menu = $this->menuRegistry->build($menuName);
+        $menu = $this->menuRegistry->build($menuName, $context);
 
         $grant = $menu->getGrant();
 

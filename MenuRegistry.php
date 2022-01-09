@@ -34,13 +34,13 @@ class MenuRegistry implements MenuRegistryInterface
         $this->menuServices[$menu->getName()] = $menu;
     }
 
-    public function build(string $name): MenuInterface
+    public function build(string $name, array $context = []): MenuInterface
     {
         if (!isset($this->cache[$name])) {
             $menuService = $this->get($name);
             $menuBuilder = new MenuBuilder($menuService->getName());
 
-            $menuService->buildMenu($menuBuilder);
+            $menuService->buildMenu($menuBuilder, $context);
             $director = new Director($menuBuilder);
 
             /**
