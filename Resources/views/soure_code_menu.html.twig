@@ -16,8 +16,8 @@
 {%- endblock list -%}
 
 {%- block list_element -%}
-    {%- set list_tag = list_tag is defined ? list_tag : 'ol' -%}
-    {%- set list_attributes = list_attributes is defined ? list_attributes : {} -%}
+    {%- set list_tag = list_tag|default('ol') -%}
+    {%- set list_attributes = list_attributes|default({}) -%}
 
     <{{- list_tag -}} {{- _self.attributes(list_attributes) -}}>
     {{- soure_code_menu_render_menu_block('menu_items', template) -}}
@@ -35,8 +35,8 @@
 {%- endblock menu_item -%}
 
 {%- block list_item -%}
-    {%- set list_item_tag = list_item_tag is defined ? list_item_tag : 'li' -%}
-    {%- set list_item_attributes = list_item_attributes is defined ? list_item_attributes : {} -%}
+    {%- set list_item_tag = list_item_tag|default('li') -%}
+    {%- set list_item_attributes = list_item_attributes|default({}) -%}
 
     <{{- list_item_tag -}} {{- _self.attributes(list_item_attributes) -}}>
     {%- if link is defined or routeName is defined -%}
@@ -56,7 +56,7 @@
 {%- endblock text -%}
 
 {%- block text_element -%}
-    {%- set text_attributes = text_attributes is defined ? text_attributes : {} -%}
+    {%- set text_attributes = text_attributes|default({}) -%}
 
     <span {{- _self.attributes(text_attributes) -}}>
         {{- soure_code_menu_render_menu_block('icon', template) -}}
@@ -65,23 +65,25 @@
 {%- endblock text_element -%}
 
 {%- block link -%}
-    {%- set link_attributes = link_attributes is defined ? link_attributes : {} -%}
+    {%- set link_attributes = link_attributes|default({}) -%}
 
     {%- if link_attributes.href is not defined -%}
+        {%- set href = '#' -%}
+
         {%- if link is defined -%}
-            {%- set link_attributes = link_attributes|merge({'href': link}) -%}
+            {%- set href = link -%}
         {%- elseif routeName is defined -%}
-            {%- set link_attributes = link_attributes|merge({'href': path(routeName, routeParameters)}) -%}
-        {%- else -%}
-            {%- set link_attributes = link_attributes|merge({'href': '#'}) -%}
+            {%- set href = path(routeName, routeParameters|default({})) -%}
         {%- endif -%}
+
+        {%- set link_attributes = link_attributes|soure_code_common_merge_attr({'href': href}) -%}
     {%- endif -%}
 
     {{- soure_code_menu_render_menu_block('link_element', template) -}}
 {%- endblock link -%}
 
 {%- block link_element -%}
-    {%- set link_attributes = link_attributes is defined ? link_attributes : {} -%}
+    {%- set link_attributes = link_attributes|default({}) -%}
 
     <a {{- _self.attributes(link_attributes) -}}>
         {{- soure_code_menu_render_menu_block('icon', template) -}}
@@ -91,16 +93,15 @@
 
 {%- block icon -%}
     {% if icon is defined and icon is not empty %}
-        {%- set icon_attributes = icon_attributes is defined ? icon_attributes : {} -%}
-        {%- set classes = icon_attributes.class is defined ? icon_attributes.class : '' -%}
-        {%- set icon_attributes = icon_attributes|merge({'class': (classes ~ ' ' ~ icon)|trim}) -%}
+        {%- set icon_attributes = icon_attributes|default({}) -%}
+        {%- set icon_attributes = icon_attributes|soure_code_common_merge_attr({'class': icon}) -%}
 
         {{- soure_code_menu_render_menu_block('icon_element', template) -}}
     {% endif %}
 {%- endblock icon -%}
 
 {%- block icon_element -%}
-    {%- set icon_attributes = icon_attributes is defined ? icon_attributes : {} -%}
+    {%- set icon_attributes = icon_attributes|default({}) -%}
 
     <span{{- _self.attributes(icon_attributes) -}}></span>
     {{- ' ' -}}
@@ -113,7 +114,7 @@
 {%- endblock divider -%}
 
 {%- block divider_element -%}
-    {%- set divider_attributes = divider_attributes is defined ? divider_attributes : {} -%}
+    {%- set divider_attributes = divider_attributes|default({}) -%}
 
     <hr{{- _self.attributes(divider_attributes) -}}/>
 {%- endblock divider_element -%}
